@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Data Analysis Results</title>
+    {% load static %}
+    {% load plotly_dash %}
+
+    <link rel="stylesheet" href="{% static 'index.css' %}">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.0.1/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <div id="WelcomeDiv" class="MainContainers">
+        <h1>Dashboard AW Quality</h1>
+    </div>
+    
+    <button class="Show">Show Data</button>
+    <button class="Hide">Hide Data</button>
+    <button id="update-table-btn" onclick="updateTableData()">Update Table</button>
+
+
+    
+    <div id="target" class="MainContainers">
+        <div class="category-buttons">
+            <button class="aw-characteristics-btn" data-category="aw_characteristics">AW Characteristics</button>
+            <button class="aw-info-btn" data-category="aw_info">AW Info</button>
+            <button class="aw-data-btn" data-category="aw_data">AW Data</button>
+            <button class="measurement-info-btn" data-category="measurement_info">Measurement Info</button>
+            <button id="hide-filters-btn">Hide Filters</button>
+        </div>
+
+        <div id="aw_characteristics" class="filter-category">
+            <label><input type="checkbox" class="toggle-vis" data-column="23"> Type_AW</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="24"> Switch_family</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="25"> Tangent_hart</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="26"> Déviation</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="27"> V_directe</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="28"> V_déviée</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="48"> Modèle_P1</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="49"> Modèle_P2</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="50"> Nombre_att_compl</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="51"> Rayon_directe</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="52"> Straal_afwijkende_tak</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="53"> Nom_verkanting</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="54"> Model_halve_tongenstellen</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="55"> Modèle_K1_K2</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="56"> Arr</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="57"> Poste</label>
+        </div>
+
+        <div id="aw_info" class="filter-category">
+            <label><input type="checkbox" class="toggle-vis" data-column="20" checked> Ramses_id</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="1"> Num_ES</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="21"> Cat_UIC</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="22"> Stratégie</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="29"> Faisceau</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="30"> Date_dernier_renouv</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="31"> Coeur_fissuré</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="32"> Gare_Bifurcation</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="33"> Ligne</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="34"> Cat_voie</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="35"> Voie</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="36"> Wissel_begin</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="37"> Wisselzone_begin</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="38"> Wissel_einde</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="39"> Wisselzone_einde</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="40"> Wissel_begin_KP</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="41"> Wissel_begin_M</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="42"> Wissel_einde_KP</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="43"> Wissel_einde_M</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="44"> Wisselzone_begin_KP</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="45"> Wisselzone_begin_M</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="46"> Wisselzone_einde_KP</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="47"> Wisselzone_einde_M</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="62"> Périodicité</label>
+        </div>
+
+        <div id="aw_data" class="filter-category">
+            <label><input type="checkbox" class="toggle-vis" data-column="0" checked> Quote_name</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="2" checked> Quote_measured_value</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="3" checked> Quote_category</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="4" checked> Quote_State</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="6"> Corrected_value</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="7"> Branch</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="8"> Nominal_value</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="9"> IAL_min</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="10"> IAL_max</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="11"> IL_min</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="12"> IL_max</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="13"> AL_min</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="14"> AL_max</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="15"> NEW_min</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="16"> NEW_max</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="17"> MAI_min</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="18"> MAI_max</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="19"> Quote_name_general</label>
+        </div>
+
+        <div id="measurement_info" class="filter-category">
+            <label><input type="checkbox" class="toggle-vis" data-column="59" checked> Date_control</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="60"> Date_last_control</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="61"> Type_control</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="63"> Tool_id</label>
+            <label><input type="checkbox" class="toggle-vis" data-column="64"> Author</label>
+        </div>
+
+        <div class="dataTables_wrapper">
+            <table id="data-table" class="display compact">
+                <thead>
+                    <tr>
+                        <th>Ramses_id</th>
+                        <th>Quote_name</th>
+                        <th>Quote_measured_value</th>
+                        <th>Quote_category</th>
+                        <th>Quote_State</th>
+                        <th>Date_control</th>
+                        <th>Corrected_value</th>
+                        <th>Branch</th>
+                        <th>Nominal_value</th>
+                        <th>IAL_min</th>
+                        <th>IAL_max</th>
+                        <th>IL_min</th>
+                        <th>IL_max</th>
+                        <th>AL_min</th>
+                        <th>AL_max</th>
+                        <th>NEW_min</th>
+                        <th>NEW_max</th>
+                        <th>MAI_min</th>
+                        <th>MAI_max</th>
+                        <th>Quote_name_general</th>
+                        <th>Num_ES</th>
+                        <th>Cat_UIC</th>
+                        <th>Stratégie</th>
+                        <th>Type_AW</th>
+                        <th>Switch_family</th>
+                        <th>Tangent_hart</th>
+                        <th>Déviation</th>
+                        <th>V_directe</th>
+                        <th>V_déviée</th>
+                        <th>Faisceau</th>
+                        <th>Date_dernier_renouv</th>
+                        <th>Coeur_fissuré</th>
+                        <th>Gare_Bifurcation</th>
+                        <th>Ligne</th>
+                        <th>Cat_voie</th>
+                        <th>Voie</th>
+                        <th>Wissel_begin</th>
+                        <th>Wisselzone_begin</th>
+                        <th>Wissel_einde</th>
+                        <th>Wisselzone_einde</th>
+                        <th>Wissel_begin_KP</th>
+                        <th>Wissel_begin_M</th>
+                        <th>Wissel_einde_KP</th>
+                        <th>Wissel_einde_M</th>
+                        <th>Wisselzone_begin_KP</th>
+                        <th>Wisselzone_begin_M</th>
+                        <th>Wisselzone_einde_KP</th>
+                        <th>Wisselzone_einde_M</th>
+                        <th>Modèle_P1</th>
+                        <th>Modèle_P2</th>
+                        <th>Nombre_att_compl</th>
+                        <th>Rayon_directe</th>
+                        <th>Straal_afwijkende_tak</th>
+                        <th>Nom_verkanting</th>
+                        <th>Model_halve_tongenstellen</th>
+                        <th>Modèle_K1_K2</th>
+                        <th>Arr</th>
+                        <th>Poste</th>
+                        <th>Date_last_control</th>
+                        <th>Type_control</th>
+                        <th>Tool_id</th>
+                        <th>Périodicité</th>
+                        <th>Author</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th><input type="text" placeholder="Search Ramses_id" /></th>
+                        <th><input type="text" placeholder="Search Quote_name" /></th>
+                        <th><input type="text" placeholder="Search Quote_measured_value" /></th>
+                        <th><input type="text" placeholder="Search Quote_category" /></th>
+                        <th><input type="text" placeholder="Search Quote_State" /></th>
+                        <th><input type="text" placeholder="Search Date_control" /></th>
+                        <th><input type="text" placeholder="Search Corrected_value" /></th>
+                        <th><input type="text" placeholder="Search Branch" /></th>
+                        <th><input type="text" placeholder="Search Nominal_value" /></th>
+                        <th><input type="text" placeholder="Search IAL_min" /></th>
+                        <th><input type="text" placeholder="Search IAL_max" /></th>
+                        <th><input type="text" placeholder="Search IL_min" /></th>
+                        <th><input type="text" placeholder="Search IL_max" /></th>
+                        <th><input type="text" placeholder="Search AL_min" /></th>
+                        <th><input type="text" placeholder="Search AL_max" /></th>
+                        <th><input type="text" placeholder="Search NEW_min" /></th>
+                        <th><input type="text" placeholder="Search NEW_max" /></th>
+                        <th><input type="text" placeholder="Search MAI_min" /></th>
+                        <th><input type="text" placeholder="Search MAI_max" /></th>
+                        <th><input type="text" placeholder="Search Quote_name_general" /></th>
+                        <th><input type="text" placeholder="Search Num_ES" /></th>
+                        <th><input type="text" placeholder="Search Cat_UIC" /></th>
+                        <th><input type="text" placeholder="Search Stratégie" /></th>
+                        <th><input type="text" placeholder="Search Type_AW" /></th>
+                        <th><input type="text" placeholder="Search Switch_family" /></th>
+                        <th><input type="text" placeholder="Search Tangent_hart" /></th>
+                        <th><input type="text" placeholder="Search Déviation" /></th>
+                        <th><input type="text" placeholder="Search V_directe" /></th>
+                        <th><input type="text" placeholder="Search V_déviée" /></th>
+                        <th><input type="text" placeholder="Search Faisceau" /></th>
+                        <th><input type="text" placeholder="Search Date_dernier_renouv" /></th>
+                        <th><input type="text" placeholder="Search Coeur_fissuré" /></th>
+                        <th><input type="text" placeholder="Search Gare_Bifurcation" /></th>
+                        <th><input type="text" placeholder="Search Ligne" /></th>
+                        <th><input type="text" placeholder="Search Cat_voie" /></th>
+                        <th><input type="text" placeholder="Search Voie" /></th>
+                        <th><input type="text" placeholder="Search Wissel_begin" /></th>
+                        <th><input type="text" placeholder="Search Wisselzone_begin" /></th>
+                        <th><input type="text" placeholder="Search Wissel_einde" /></th>
+                        <th><input type="text" placeholder="Search Wisselzone_einde" /></th>
+                        <th><input type="text" placeholder="Search Wissel_begin_KP" /></th>
+                        <th><input type="text" placeholder="Search Wissel_begin_M" /></th>
+                        <th><input type="text" placeholder="Search Wissel_einde_KP" /></th>
+                        <th><input type="text" placeholder="Search Wissel_einde_M" /></th>
+                        <th><input type="text" placeholder="Search Wisselzone_begin_KP" /></th>
+                        <th><input type="text" placeholder="Search Wisselzone_begin_M" /></th>
+                        <th><input type="text" placeholder="Search Wisselzone_einde_KP" /></th>
+                        <th><input type="text" placeholder="Search Wisselzone_einde_M" /></th>
+                        <th><input type="text" placeholder="Search Modèle_P1" /></th>
+                        <th><input type="text" placeholder="Search Modèle_P2" /></th>
+                        <th><input type="text" placeholder="Search Nombre_att_compl" /></th>
+                        <th><input type="text" placeholder="Search Rayon_directe" /></th>
+                        <th><input type="text" placeholder="Search Straal_afwijkende_tak" /></th>
+                        <th><input type="text" placeholder="Search Nom_verkanting" /></th>
+                        <th><input type="text" placeholder="Search Model_halve_tongenstellen" /></th>
+                        <th><input type="text" placeholder="Search Modèle_K1_K2" /></th>
+                        <th><input type="text" placeholder="Search Arr" /></th>
+                        <th><input type="text" placeholder="Search Poste" /></th>
+                        <th><input type="text" placeholder="Search Date_last_control" /></th>
+                        <th><input type="text" placeholder="Search Type_control" /></th>
+                        <th><input type="text" placeholder="Search Tool_id" /></th>
+                        <th><input type="text" placeholder="Search Périodicité" /></th>
+                        <th><input type="text" placeholder="Search Author" /></th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="plot-container dash-graph">
+        <div id="container_iframe">
+            {% plotly_app name='quote_evolution_dashboard' %}
+        </div>
+        <button class="copy-button" onclick="copyPlotAsImage('quote-measured-value-graph')">Copy Graph</button>
+        <div class="copy-notification" id="quote-measured-value-graph-notification">Graph copied to clipboard!</div>
+        <!-- Place this inside your main dashboard container -->
+        <div id="latest-kpi-value" style="font-size: 24px; margin-top: 20px;">Latest Value: <span id="latest-value"></span></div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.0.1/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.0.1/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.0.1/js/buttons.print.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <script>
+        // Function to show the selected category and hide others
+        function showCategory(categoryId) {
+            var categories = document.getElementsByClassName('filter-category');
+            for (var i = 0; i < categories.length; i++) {
+                categories[i].style.display = 'none';
+            }
+            document.getElementById(categoryId).style.display = 'block';
+        }
+    
+        // Function to hide all categories
+        function hideAllCategories() {
+            var categories = document.getElementsByClassName('filter-category');
+            for (var i = 0; i < categories.length; i++) {
+                categories[i].style.display = 'none';
+            }
+        }
+    
+        // Function to update the DataTable with AJAX when filters (years/arrondissements) are applied
+        function updateTableData() {
+            var selectedYears = $('#year-dropdown').val();  // Get selected years from Dash
+            var selectedArrondissements = $('#arrondissement-dropdown').val();  // Get selected arrondissements from Dash
+            
+            // Make sure both values are selected
+            if (!selectedYears || !selectedArrondissements) {
+                alert('Please select both years and arrondissements.');
+                return;
+            }
+
+            // AJAX call to update the table data
+            console.log("Starting AJAX call with years and arrondissements:", selectedYears, selectedArrondissements);
+    
+            $.ajax({
+                url: '/load_data_view/',  // Update the table with filtered data
+                method: 'GET',
+                data: {
+                    years: selectedYears,
+                    arrondissements: selectedArrondissements
+                },
+                success: function(response) {
+                    console.log('AJAX Success:', response);
+                    var tableData = response.data;  // Use response data to update the table
+                    var table = $('#data-table').DataTable();
+                    table.clear().rows.add(tableData).draw();
+                },
+                error: function(error) {
+                    console.error('Failed to update table data:', error);
+                }
+            });
+        }
+    
+        $(document).ready(function() {
+            // Toggle Show/Hide Data
+            $('.Show').click(function() {
+                $('#target').show(500);
+                $('.Show').hide(0);
+                $('.Hide').show(0);
+            });
+            $('.Hide').click(function() {
+                $('#target').hide(500);
+                $('.Show').show(0);
+                $('.Hide').hide(0);
+            });
+    
+            // Initialize DataTable with data passed from Django template (summary_stats_array)
+            var uniqueCountsData = JSON.parse('{{ summary_stats_array|escapejs }}');
+    
+            var table = $('#data-table').DataTable({
+                dom: 'Brtip',
+                data: uniqueCountsData,
+                scrollX: true,
+                columnDefs: [
+                    { width: "100px", targets: "_all" }
+                ],
+                columns: [
+                    { title: 'Ramses_id' },
+                    { title: 'Quote_name' },
+                    { title: 'Quote_measured_value' },
+                    { title: 'Quote_category' },
+                    { title: 'Quote_State' },
+                    { title: 'Date_control' },
+    
+                    // Add hidden columns (visible: false)
+                    { title: 'Corrected_value', visible: false },
+                    { title: 'Branch', visible: false },
+                    { title: 'Nominal_value', visible: false },
+                    { title: 'IAL_min', visible: false },
+                    { title: 'IAL_max', visible: false },
+                    { title: 'IL_min', visible: false },
+                    { title: 'IL_max', visible: false },
+                    { title: 'AL_min', visible: false },
+                    { title: 'AL_max', visible: false },
+                    { title: 'NEW_min', visible: false },
+                    { title: 'NEW_max', visible: false },
+                    { title: 'MAI_min', visible: false },
+                    { title: 'MAI_max', visible: false },
+                    { title: 'Quote_name_general', visible: false },
+                    { title: 'Num_ES', visible: false },
+                    { title: 'Cat_UIC', visible: false },
+                    { title: 'Stratégie', visible: false },
+                    { title: 'Type_AW', visible: false },
+                    { title: 'Switch_family', visible: false },
+                    { title: 'Tangent_hart', visible: false },
+                    { title: 'Déviation', visible: false },
+                    { title: 'V_directe', visible: false },
+                    { title: 'V_déviée', visible: false },
+                    { title: 'Faisceau', visible: false },
+                    { title: 'Date_dernier_renouv', visible: false },
+                    { title: 'Coeur_fissuré', visible: false },
+                    { title: 'Gare_Bifurcation', visible: false },
+                    { title: 'Ligne', visible: false },
+                    { title: 'Cat_voie', visible: false },
+                    { title: 'Voie', visible: false },
+                    { title: 'Wissel_begin', visible: false },
+                    { title: 'Wisselzone_begin', visible: false },
+                    { title: 'Wissel_einde', visible: false },
+                    { title: 'Wisselzone_einde', visible: false },
+                    { title: 'Wissel_begin_KP', visible: false },
+                    { title: 'Wissel_begin_M', visible: false },
+                    { title: 'Wissel_einde_KP', visible: false },
+                    { title: 'Wissel_einde_M', visible: false },
+                    { title: 'Wisselzone_begin_KP', visible: false },
+                    { title: 'Wisselzone_begin_M', visible: false },
+                    { title: 'Wisselzone_einde_KP', visible: false },
+                    { title: 'Wisselzone_einde_M', visible: false },
+                    { title: 'Modèle_P1', visible: false },
+                    { title: 'Modèle_P2', visible: false },
+                    { title: 'Nombre_att_compl', visible: false },
+                    { title: 'Rayon_directe', visible: false },
+                    { title: 'Straal_afwijkende_tak', visible: false },
+                    { title: 'Nom_verkanting', visible: false },
+                    { title: 'Model_halve_tongenstellen', visible: false },
+                    { title: 'Modèle_K1_K2', visible: false },
+                    { title: 'Arr', visible: false },
+                    { title: 'Poste', visible: false },
+                    { title: 'Date_last_control', visible: false },
+                    { title: 'Type_control', visible: false },
+                    { title: 'Tool_id', visible: false },
+                    { title: 'Périodicité', visible: false },
+                    { title: 'Author', visible: false }
+                ],
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ]
+            });
+    
+            // Toggle column visibility when checkbox is changed
+            $('input.toggle-vis').on('change', function(e) {
+                var column = table.column($(this).attr('data-column'));
+                var isVisible = column.visible();
+                column.visible(!isVisible);
+    
+                // Adjust column widths and redraw the table
+                table.columns.adjust().draw();
+    
+                if (!isVisible) {
+                    var columnIndex = $(this).attr('data-column');
+                    var column_name = table.settings()[0].aoColumns[columnIndex].data;
+    
+                    // Fetch years and arrondissements from filters
+                    var selectedYears = $('#year-dropdown').val();
+                    var selectedArrondissements = $('#arrondissement-dropdown').val();
+    
+                    $.ajax({
+                        url: '/fetch_column_data/',
+                        method: 'GET',
+                        data: {
+                            column: column_name,
+                            years: selectedYears,
+                            arrondissements: selectedArrondissements
+                        },
+                        success: function(data) {
+                            var rows = table.rows().data();
+                            for (var i = 0; i < rows.length; i++) {
+                                if (data[i] && data[i][column_name]) {
+                                    rows[i][columnIndex] = data[i][column_name];
+                                }
+                            }
+                            table.rows().invalidate().draw();
+                        },
+                        error: function(error) {
+                            console.error('Error fetching column data:', error);
+                        }
+                    });
+                }
+            });
+    
+            // Filter category selection
+            $('.category-buttons button').click(function() {
+                $('.category-buttons button').removeClass('selected').addClass('unselected');
+                $(this).addClass('selected').removeClass('unselected');
+                showCategory(this.getAttribute('data-category'));
+            });
+    
+            // Hide all filters when the "Hide Filters" button is clicked
+            $('#hide-filters-btn').click(function() {
+                hideAllCategories();
+                $('.category-buttons button').removeClass('selected').addClass('unselected');
+            });
+    
+            // Show the default category (AW characteristics) when the page is loaded
+            document.addEventListener("DOMContentLoaded", function() {
+                showCategory('aw_characteristics');
+                document.querySelector('.aw-characteristics-btn').classList.add('selected');
+            });
+    
+            // Event listener for the 'Update the Table' button
+            $('#update-table-btn').click(function() {
+                console.log('Update Table button clicked!');
+                var selectedYears = $('#year-dropdown').val();
+                var selectedArrondissements = $('#arrondissement-dropdown').val();
+
+                console.log('Selected Years:', selectedYears);  // Debugging statement
+                console.log('Selected Arrondissements:', selectedArrondissements);  // Debugging statement
+
+    
+                if (selectedYears && selectedArrondissements) {
+                    updateTableData(selectedYears, selectedArrondissements);
+                } else {
+                    alert("Please select years and arrondissements to update the table.");
+                }
+            });
+    
+        });
+    
+        // Function to copy Plotly graph as an image to the clipboard
+        function copyPlotAsImage(plotId) {
+            var iframe = document.querySelector(".dash-graph iframe");
+            if (iframe) {
+                var graphDiv = iframe.contentWindow.document.getElementById(plotId);
+                if (graphDiv.getElementsByClassName('js-plotly-plot').length > 0) {
+                    graphDiv = graphDiv.getElementsByClassName('js-plotly-plot')[0];
+                }
+                Plotly.toImage(graphDiv, { format: 'png' }).then(function(url) {
+                    const img = new Image();
+                    img.src = url;
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0);
+    
+                        // Copy the image to the clipboard
+                        canvas.toBlob(function(blob) {
+                            const item = new ClipboardItem({ 'image/png': blob });
+                            navigator.clipboard.write([item]).then(function() {
+                                showCopyNotification(plotId);
+                            }, function(error) {
+                                console.error('Copy to clipboard failed:', error);
+                            });
+                        });
+                    };
+                });
+            } else {
+                console.error("Iframe containing the Dash app not found.");
+            }
+        }
+    
+        // Show copy notification
+        function showCopyNotification(plotId) {
+            var notificationId = plotId + '-notification';
+            var notification = document.getElementById(notificationId);
+            notification.style.display = 'block';
+            setTimeout(function() {
+                notification.style.display = 'none';
+            }, 2000);
+        }
+    
+        // Show the default category on page load
+        document.addEventListener("DOMContentLoaded", function() {
+            showCategory('aw_characteristics');
+            document.querySelector('.aw-characteristics-btn').classList.add('selected');
+        });
+    </script>
+
+    
+
+</body>
+</html>

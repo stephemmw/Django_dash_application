@@ -1,0 +1,210 @@
+* {
+    font-family: sans-serif;
+}
+
+#WelcomeDiv {
+    width: 100%;
+    height: 275px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.MainContainers {
+    position: relative;
+}
+
+/* HIDE AND SEEK DIV */
+
+#target {
+    display: none;
+}
+
+.Hide {
+    display: none;
+}
+
+/* DATA TABLE */
+
+.dataTables_wrapper {
+    width: 100%;
+    margin: 0 auto;
+    overflow-x: auto;
+}
+
+table.dataTable {
+    width: 100% !important;
+    margin: 0 auto;
+    overflow-x: auto;
+}
+
+table.dataTable thead th,
+table.dataTable tfoot th {
+    padding: 10px;
+    font-size: 16px;
+}
+
+table.dataTable tbody td {
+    padding: 10px;
+    font-size: 14px;
+}
+
+/* DATA TABLE FILTERS */
+
+#column_filters {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px 25px;
+    padding: 10px;
+}
+
+#column_filters label {
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Category buttons */
+.category-buttons {
+    margin-bottom: 20px;
+}
+
+.category-buttons button {
+    margin-right: 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+    border: none;
+    color: #fff;
+}
+#aw_characteristics{background-color: #fff;}
+.aw-characteristics-btn {
+    background-color: #0B68B0;
+}
+
+.aw-info-btn {
+    background-color: #4184D0; 
+}
+
+.aw-data-btn {
+    background-color: #66A2F0; 
+}
+
+.measurement-info-btn {
+    background-color: #88C1FF;
+}
+
+
+/* Category buttons */
+.category-buttons {
+    margin-bottom: 20px;
+}
+
+.category-buttons button {
+    margin-right: 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+    border: none;
+    color: #fff;
+    background-color: #E6F4F1; /* Default unselected button color */
+}
+
+.category-buttons button.selected {
+    background-color: #0B68B0; /* Selected button color */
+}
+
+.category-buttons button.unselected {
+    background-color: #E6F4F1; /* Unselected button color */
+}
+
+/* Filter categories */
+.filter-category {
+    display: none;
+    padding: 20px;
+    border-radius: 5px;
+    background-color: #F2FAFF; /* Background color for categories */
+}
+
+.filter-category label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+/* Search input styling */
+thead input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Media query for screen width less than 1200px */
+@media (max-width: 1200px) {
+    #column_filters {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* Media query for screen width less than 900px */
+@media (max-width: 900px) {
+    #column_filters {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Media query for screen width less than 600px */
+@media (max-width: 600px) {
+    #column_filters {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Media query for screen width less than 400px */
+@media (max-width: 400px) {
+    #column_filters {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* DASH APP */
+
+.plot-container {
+    margin-top: 50px;
+    position: relative;
+    width: 100%;
+}
+
+#container_iframe div {
+    height: 1200px !important;
+}
+
+.dash-graph {
+    height: 600px;
+    width: 100%;
+}
+
+.dash-app-container iframe {
+    width: 100%;
+    height: 100vh; /* Set the iframe height to 100% of the viewport height */
+}
+
+.copy-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.copy-notification {
+    position: absolute;
+    top: 40px;
+    right: 10px;
+    padding: 5px 10px;
+    background-color: #28a745;
+    color: #fff;
+    border-radius: 5px;
+    display: none;
+}
